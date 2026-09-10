@@ -8,6 +8,7 @@ import {
   Truck,
   RotateCcw,
 } from "lucide-react";
+import CartButton from "@/components/buttons/CartButton";
 
 const ProductActions = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -58,10 +59,9 @@ const ProductActions = ({ product }) => {
           </button>
         </div>
 
-        <button className="btn btn-primary flex-1 gap-2">
-          <ShoppingCart size={18} />
-          Add to Cart
-        </button>
+        <div className="flex-1">
+          <CartButton product={product}></CartButton>
+        </div>
 
         <button className="btn btn-outline btn-square">
           <Heart size={18} />

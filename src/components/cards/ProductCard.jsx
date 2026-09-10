@@ -2,8 +2,11 @@
 import { Star, ShoppingCart, Eye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import CartButton from "../buttons/CartButton";
+import { getSingleProduct } from "@/actions/server/product";
 
-const ProductCard = ({ product }) => {
+const ProductCard = async ({ id }) => {
+  const product = await getSingleProduct(id);
   const { title, bangla, image, ratings, price, sold } = product;
 
   return (
@@ -52,7 +55,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="p-4 pt-0 grid grid-cols-2 gap-2 mt-2">
+      <div className="p-4 pt-0 flex flex-col gap-2 mt-2">
         <Link
           href={`/products/${product._id}`}
           className="btn btn-outline btn-sm gap-1"
@@ -61,10 +64,7 @@ const ProductCard = ({ product }) => {
           Details
         </Link>
 
-        <button className="btn btn-primary btn-sm gap-1">
-          <ShoppingCart size={16} />
-          Add
-        </button>
+        <CartButton product={product}></CartButton>
       </div>
     </div>
   );

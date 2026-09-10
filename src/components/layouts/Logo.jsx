@@ -12,7 +12,7 @@ const Logo = () => {
         height={40}
       />
       <h2 className="text-xl font-bold">
-        Hero <span className="text-primary">Kidz</span>
+        Hero <span className="text-primary">Kidzz</span>
       </h2>
     </Link>
   );

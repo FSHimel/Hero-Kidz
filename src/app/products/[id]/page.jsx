@@ -3,6 +3,54 @@ import Image from "next/image";
 import { Star, CheckCircle2, HelpCircle, FileText } from "lucide-react";
 import ProductActions from "./ProductActions";
 
+const siteUrl = "https://hero-kidzz-two.vercel.app";
+
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const product = await getSingleProduct(id);
+
+  const title = `${product.title} | Hero Kidzz`;
+
+  const description =
+    product.description?.slice(0, 160) ||
+    `View ${product.title} on Hero Kidzz.`;
+
+  const image = product.image || "https://i.ibb.co/jZHgJmms/image.png";
+
+  return {
+    title,
+
+    description,
+
+    openGraph: {
+      type: "website",
+      url: `${siteUrl}/products/${params.id}`,
+      title,
+      description,
+
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: product.title,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+
+    alternates: {
+      canonical: `${siteUrl}/products/${params.id}`,
+    },
+  };
+}
+
 const SingleProduct = async ({ params }) => {
   const { id } = await params;
   const rawProduct = await getSingleProduct(id);
