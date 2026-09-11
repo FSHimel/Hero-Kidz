@@ -3,11 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail, User, Loader2 } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
 import { postUser } from "@/actions/server/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import SocialLoginButton from "../buttons/SocialLoginButton";
+import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
 
 export default function Register() {
+  const params = useSearchParams();
+  const callbackUrl = params.get("callbackUrl") || "/";
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -31,23 +35,19 @@ export default function Register() {
       const result = await postUser(form);
 
       if (result.acknowledged) {
-        alert("Resistration Successful. Please Login...🖐️");
-        router.push("/login");
+        // router.push("/login");
+        const result = await signIn("credentials", {
+          email: email,
+          password: password,
+          callbackUrl: callbackUrl,
+        });
+        Swal.fire("Success", "Resistration Successful", "success");
       }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleLogin = async () => {
-    // TODO: Add your Google sign-in logic
-    //
-    // Example:
-    // await signIn("google", {
-    //   callbackUrl: "/dashboard",
-    // });
   };
 
   return (
@@ -155,14 +155,7 @@ export default function Register() {
           <div className="divider text-sm text-base-content/50">OR</div>
 
           {/* Google */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="btn btn-outline w-full rounded-xl"
-          >
-            <FcGoogle className="text-xl" />
-            Continue with Google
-          </button>
+          <SocialLoginButton></SocialLoginButton>
 
           {/* Login */}
           <p className="text-center text-sm text-base-content/60 mt-6">

@@ -3,10 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail, Loader2 } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
+import { useRouter, useSearchParams } from "next/navigation";
+import SocialLoginButton from "../buttons/SocialLoginButton";
 
 export default function Login() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const callbackUrl = params.get("callbackUrl") || "/";
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -29,16 +34,17 @@ export default function Login() {
         password: form.password,
         redirect: false,
       });
-
+      if (!result.ok) {
+        Swal.fire("Error", "Email & Password didn't match", "error");
+      } else {
+        Swal.fire("Success", "Welcome Back", "success");
+        router.push(callbackUrl);
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleLogin = async () => {
-    // TODO: Add your Google sign-in logic
   };
 
   return (
@@ -136,20 +142,13 @@ export default function Login() {
           <div className="divider text-sm text-base-content/50">OR</div>
 
           {/* Google Login */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="btn btn-outline w-full rounded-xl"
-          >
-            <FcGoogle className="text-xl" />
-            Continue with Google
-          </button>
+          <SocialLoginButton></SocialLoginButton>
 
           {/* Register */}
           <p className="text-center text-sm text-base-content/60 mt-6">
             Don&apos;t have an account?{" "}
             <Link
-              href="/register"
+              href={`/register?callbackUrl=${callbackUrl}`}
               className="text-primary font-semibold hover:underline"
             >
               Create one

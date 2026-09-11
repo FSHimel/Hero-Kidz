@@ -1,14 +1,15 @@
 "use client";
 import { ShoppingCart } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const CartButton = ({ product }) => {
-  const isLogin = true;
+  const session = useSession();
   const router = useRouter();
   const path = usePathname();
   const handleCart = () => {
-    if (isLogin) {
+    if (session.status == "authenticated") {
       alert(`${product._id}`);
     } else {
       router.push(`/login?callbackUrl=${path}`);
