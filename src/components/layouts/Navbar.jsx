@@ -3,6 +3,7 @@ import Logo from "./Logo";
 import Navlink from "../buttons/Navlink";
 import Link from "next/link";
 import { FiShoppingCart } from "react-icons/fi";
+import AuthButton from "../buttons/AuthButton";
 
 const Navbar = () => {
   const navLinks = (
@@ -56,12 +57,13 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">{navLinks}</ul>
       </div>
       <div className="navbar-end space-x-4">
-        <Link href={"/cart"} className="btn btn-ghost btn-circle btn-primary transition-all duration-300 ease-in-out hover:scale-110">
+        <Link
+          href={"/cart"}
+          className="btn btn-ghost btn-circle btn-primary transition-all duration-300 ease-in-out hover:scale-110"
+        >
           <FiShoppingCart></FiShoppingCart>
         </Link>
-        <Link href={"/login"} className="btn btn-primary btn-outline">
-          Login
-        </Link>
+        <AuthButton></AuthButton>
       </div>
     </div>
   );

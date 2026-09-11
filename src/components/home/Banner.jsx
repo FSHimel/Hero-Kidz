@@ -3,9 +3,9 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="flex justify-between items-cente">
+    <div className="flex flex-col md:flex-row justify-between items-cente space-y-5">
       <div className="flex-1 space-y-5">
-        <h1 className="text-6xl font-bold leading-18">
+        <h1 className="text-4xl md:text-6xl font-bold md:leading-18">
           Give Your Child A <span className="text-primary">Enjoyable Life</span>
         </h1>
         <h2 className="text-xl">Buy all the products up to 15% discount</h2>

@@ -4,6 +4,7 @@ const dbName = process.env.DB_NAME;
 
 export const collectionName = {
     PRODUCTS: 'products',
+    USERS: "users"
 }
 export async function connectToMongoDB() {
   try {

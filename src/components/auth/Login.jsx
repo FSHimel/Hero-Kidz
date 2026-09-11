@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,19 @@ export default function Login() {
 
     try {
       // TODO: Add your login logic here
+      const formData = new FormData(e.currentTarget);
+
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const form = { email, password };
+
+      const result = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+
     } catch (error) {
       console.error(error);
     } finally {

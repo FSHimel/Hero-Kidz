@@ -4,10 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail, User, Loader2 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { postUser } from "@/actions/server/auth";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,23 +21,19 @@ export default function Register() {
       // TODO: Add your registration logic here
       //
       // Example:
-      // const formData = new FormData(e.currentTarget);
-      //
-      // const name = formData.get("name");
-      // const email = formData.get("email");
-      // const password = formData.get("password");
-      //
-      // await fetch("/api/auth/register", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     name,
-      //     email,
-      //     password,
-      //   }),
-      // });
+      const formData = new FormData(e.currentTarget);
+
+      const name = formData.get("name");
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const form = { name, email, password };
+      const result = await postUser(form);
+
+      if (result.acknowledged) {
+        alert("Resistration Successful. Please Login...🖐️");
+        router.push("/login");
+      }
     } catch (error) {
       console.error(error);
     } finally {
