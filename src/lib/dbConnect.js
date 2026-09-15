@@ -1,11 +1,12 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient } from "mongodb";
 const client = new MongoClient(process.env.MONGODB_URI);
 const dbName = process.env.DB_NAME;
 
 export const collectionName = {
-    PRODUCTS: 'products',
-    USERS: "users"
-}
+  PRODUCTS: "products",
+  USERS: "users",
+  CART: "cart",
+};
 export async function connectToMongoDB() {
   try {
     await client.connect();
@@ -16,6 +17,6 @@ export async function connectToMongoDB() {
   }
 }
 
-export const dbConnect=(cname)=>{
-    return client.db(dbName).collection(cname)
-}
+export const dbConnect = (cname) => {
+  return client.db(dbName).collection(cname);
+};

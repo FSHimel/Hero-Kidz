@@ -35,7 +35,11 @@ export default function Login() {
         redirect: false,
       });
       if (!result.ok) {
-        Swal.fire("Error", "Email & Password didn't match", "error");
+        Swal.fire(
+          "Error",
+          "Email & Password didn't match. Try login with Google/ Register",
+          "error",
+        );
       } else {
         Swal.fire("Success", "Welcome Back", "success");
         router.push(callbackUrl);
