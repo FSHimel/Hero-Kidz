@@ -3,9 +3,14 @@
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
-import { deleteItemFromCart } from "@/actions/server/cart";
+import {
+  decreaseItemDb,
+  deleteItemFromCart,
+  increaseItemDb,
+} from "@/actions/server/cart";
+import { useState } from "react";
 
-const CartItem = ({ item, onIncrease, onDecrease }) => {
+const CartItem = ({ item, removeItem, updateQuantity }) => {
   const handleDelete = async () => {
     Swal.fire({
       title: "Are you sure?",
@@ -19,6 +24,7 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
       if (result.isConfirmed) {
         const result = await deleteItemFromCart(item._id);
         if (result.success) {
+          removeItem(item._id);
           Swal.fire({
             title: "Deleted!",
             text: "Your file has been deleted.",
@@ -33,6 +39,28 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
         }
       }
     });
+  };
+
+  const [loading, setLoading] = useState(false);
+
+  const onIncrease = async () => {
+    setLoading(true)
+    const result = await increaseItemDb(item._id, item.quantity);
+    if (result.success) {
+      //   Swal.fire("success", "q increase", "success");
+      updateQuantity(item._id, item.quantity + 1);
+    }
+    setLoading(false)
+  };
+
+  const onDecrease = async () => {
+    setLoading(true)
+    const result = await decreaseItemDb(item._id, item.quantity);
+    if (result.success) {
+      //   Swal.fire("success", "q decrease", "success");
+      updateQuantity(item._id, item.quantity - 1);
+    }
+    setLoading(false)
   };
 
   return (
@@ -68,8 +96,8 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
         {/* Quantity */}
         <div className="join">
           <button
-            onClick={() => onDecrease(item.productId)}
-            disabled={item.quantity <= 1}
+            onClick={onDecrease}
+            disabled={item.quantity === 1 || loading}
             className="btn btn-sm join-item"
           >
             <Minus size={16} />
@@ -80,7 +108,8 @@ const CartItem = ({ item, onIncrease, onDecrease }) => {
           </span>
 
           <button
-            onClick={() => onIncrease(item.productId)}
+            onClick={onIncrease}
+            disabled={item.quantity === 10 || loading}
             className="btn btn-sm join-item"
           >
             <Plus size={16} />

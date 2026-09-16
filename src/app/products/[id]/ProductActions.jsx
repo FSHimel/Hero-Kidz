@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import {
-  ShoppingCart,
-  Heart,
   ShieldCheck,
   Truck,
   RotateCcw,
@@ -11,10 +8,8 @@ import {
 import CartButton from "@/components/buttons/CartButton";
 
 const ProductActions = ({ product }) => {
-  const [quantity, setQuantity] = useState(1);
 
-  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  
 
   const discountedPrice = Math.round(
     product.price - (product.price * (product.discount || 0)) / 100,
@@ -41,31 +36,11 @@ const ProductActions = ({ product }) => {
 
       {/* Quantity Selector & Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 items-stretch">
-        <div className="join border border-base-300 rounded-lg w-fit">
-          <button
-            className="join-item btn btn-ghost btn-sm px-4"
-            onClick={handleDecrease}
-          >
-            -
-          </button>
-          <span className="join-item btn btn-ghost btn-sm no-animation cursor-default font-semibold px-4">
-            {quantity}
-          </span>
-          <button
-            className="join-item btn btn-ghost btn-sm px-4"
-            onClick={handleIncrease}
-          >
-            +
-          </button>
-        </div>
+          
 
         <div className="flex-1">
           <CartButton product={product}></CartButton>
         </div>
-
-        <button className="btn btn-outline btn-square">
-          <Heart size={18} />
-        </button>
       </div>
 
       {/* Value Badges */}
