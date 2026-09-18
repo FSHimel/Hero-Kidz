@@ -11,7 +11,10 @@ import {
 import { useState } from "react";
 
 const CartItem = ({ item, removeItem, updateQuantity }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleDelete = async () => {
+    setLoading(true);
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -38,29 +41,28 @@ const CartItem = ({ item, removeItem, updateQuantity }) => {
           });
         }
       }
+      setLoading(false);
     });
   };
 
-  const [loading, setLoading] = useState(false);
-
   const onIncrease = async () => {
-    setLoading(true)
+    setLoading(true);
     const result = await increaseItemDb(item._id, item.quantity);
     if (result.success) {
       //   Swal.fire("success", "q increase", "success");
       updateQuantity(item._id, item.quantity + 1);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const onDecrease = async () => {
-    setLoading(true)
+    setLoading(true);
     const result = await decreaseItemDb(item._id, item.quantity);
     if (result.success) {
       //   Swal.fire("success", "q decrease", "success");
       updateQuantity(item._id, item.quantity - 1);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   return (
@@ -76,46 +78,47 @@ const CartItem = ({ item, removeItem, updateQuantity }) => {
         />
       </figure>
 
-      {/* Content */}
-      <div className="card-body p-0 pl-4 flex-row items-center justify-between gap-4">
-        {/* Title & Price */}
-        <div className="flex-1">
-          <h2 className="font-semibold text-base md:text-lg line-clamp-2">
-            {item.title}
-          </h2>
+      <div className="flex justify-between items-center w-full">
+        {/* Content */}
+        <div className="card-body p-0 pl-4 flex-col  justify-between gap-4">
+          {/* Title & Price */}
+          <div className="flex-1">
+            <h2 className="font-semibold text-base md:text-lg line-clamp-2">
+              {item.title}
+            </h2>
 
-          <p className="text-neutral-400 font-bold mt-1">
-            ৳{item.price} x {item.quantity} =
-            <span className="text-primary text-[18px]">
-              {" "}
-              {item.price * item.quantity}
+            <p className="text-neutral-400 font-bold mt-1">
+              ৳{item.price} x {item.quantity} =
+              <span className="text-primary text-[18px]">
+                {" "}
+                {item.price * item.quantity}
+              </span>
+            </p>
+          </div>
+
+          {/* Quantity */}
+          <div className="join">
+            <button
+              onClick={onDecrease}
+              disabled={item.quantity === 1 || loading}
+              className="btn btn-sm join-item"
+            >
+              <Minus size={16} />
+            </button>
+
+            <span className="btn btn-sm join-item no-animation cursor-default">
+              {item.quantity}
             </span>
-          </p>
+
+            <button
+              onClick={onIncrease}
+              disabled={item.quantity === 10 || loading}
+              className="btn btn-sm join-item"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
         </div>
-
-        {/* Quantity */}
-        <div className="join">
-          <button
-            onClick={onDecrease}
-            disabled={item.quantity === 1 || loading}
-            className="btn btn-sm join-item"
-          >
-            <Minus size={16} />
-          </button>
-
-          <span className="btn btn-sm join-item no-animation cursor-default">
-            {item.quantity}
-          </span>
-
-          <button
-            onClick={onIncrease}
-            disabled={item.quantity === 10 || loading}
-            className="btn btn-sm join-item"
-          >
-            <Plus size={16} />
-          </button>
-        </div>
-
         {/* Remove */}
         <button
           onClick={handleDelete}

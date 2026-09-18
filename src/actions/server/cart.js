@@ -9,7 +9,7 @@ import { cache } from "react";
 
 const cartCollection = dbConnect(collectionName.CART);
 
-export const handleAddToCart = async ({ product, inc = true }) => {
+export const handleAddToCart = async ({ product }) => {
   const user = await getServerSession(authOptions);
   if (!user) {
     return { success: false };
@@ -22,7 +22,7 @@ export const handleAddToCart = async ({ product, inc = true }) => {
     //update the cartData
     const updatedData = {
       $inc: {
-        quantity: inc ? 1 : -1,
+        quantity: 1,
       },
     };
     const result = await cartCollection.updateOne(query, updatedData);
@@ -62,7 +62,7 @@ export const deleteItemFromCart = async (id) => {
 
   if (id.length != 24) return { success: false };
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id), email: user?.email };
 
   const result = await cartCollection.deleteOne(query);
 
@@ -87,7 +87,7 @@ export const increaseItemDb = async (id, quantity) => {
     };
   }
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id), email: user?.email };
 
   const updatedData = {
     $inc: {
@@ -114,7 +114,7 @@ export const decreaseItemDb = async (id, quantity) => {
     };
   }
 
-  const query = { _id: new ObjectId(id) };
+  const query = { _id: new ObjectId(id), email: user?.email };
 
   const updatedData = {
     $inc: {
@@ -125,4 +125,13 @@ export const decreaseItemDb = async (id, quantity) => {
   const result = await cartCollection.updateOne(query, updatedData);
 
   return { success: Boolean(result.modifiedCount) };
+};
+
+export const clearCart = async () => {
+  const user = (await getServerSession(authOptions)) || {};
+  if (!user) return { success: false };
+  const query = { email: user?.email };
+  const result = await cartCollection.deleteMany(query);
+
+  return result;
 };

@@ -6,6 +6,7 @@ export const collectionName = {
   PRODUCTS: "products",
   USERS: "users",
   CART: "cart",
+  ORDER: "order",
 };
 export async function connectToMongoDB() {
   try {
